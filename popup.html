@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WordAnchor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f3;
+      --surface: #ffffff;
+      --border: #e8e6e0;
+      --text: #1a1917;
+      --muted: #9e9b94;
+      --accent: #4f6ef7;
+    }
+
+    body.dark {
+      --bg: #111111;
+      --surface: #1c1c1e;
+      --border: #2a2a2e;
+      --text: #e8e6e0;
+      --muted: #6e6e73;
+    }
+
+    body {
+      width: 340px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--surface);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 30px; height: 30px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900; color: #fff;
+    }
+
+    .logo-text { font-size: 15px; font-weight: 800; color: var(--text); }
+    .logo-sub { font-size: 10px; color: var(--muted); font-weight: 500; }
+
+    .dark-btn {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    /* master toggle row */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .toggle-label { font-size: 14px; font-weight: 700; color: var(--text); }
+    .toggle-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    .toggle {
+      width: 44px; height: 25px;
+      border-radius: 13px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.25s;
+      flex-shrink: 0;
+    }
+
+    .toggle.on { background: var(--accent); }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 19px; height: 19px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      transition: left 0.25s;
+    }
+
+    .toggle.on .toggle-thumb { left: 22px; }
+
+    /* controls */
+    .controls { padding: 16px; display: flex; flex-direction: column; gap: 18px; }
+
+    .control-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .control-group label span {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    /* segment buttons */
+    .segments {
+      display: flex;
+      gap: 6px;
+    }
+
+    .seg-btn {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 9px;
+      border: 1.5px solid var(--border);
+      background: none;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .seg-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* range slider */
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .range-labels span {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* preview */
+    .preview {
+      margin: 0 16px 16px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .preview-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .preview-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px 12px;
+      border-top: 1.5px solid var(--border);
+    }
+
+    .footer-muted { font-size: 10px; color: var(--muted); font-weight: 600; }
+    .footer-link { font-size: 11px; color: var(--accent); font-weight: 800; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">W</div>
+      <div>
+        <div class="logo-text">WordAnchor</div>
+        <div class="logo-sub">Easier reading, everywhere</div>
+      </div>
+    </div>
+    <button class="dark-btn" id="darkBtn">🌙 Dark</button>
+  </div>
+
+  <!-- Master toggle -->
+  <div class="toggle-row">
+    <div>
+      <div class="toggle-label">Enable on this page</div>
+      <div class="toggle-sub">Bold word starts now</div>
+    </div>
+    <div class="toggle" id="masterToggle">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+
+    <!-- Bold letters -->
+    <div class="control-group">
+      <label>Bold Letters Per Word <span id="letterVal">2</span></label>
+      <div class="segments" id="letterBtns">
+        <button class="seg-btn" data-val="1">1</button>
+        <button class="seg-btn active" data-val="2">2</button>
+        <button class="seg-btn" data-val="3">3</button>
+        <button class="seg-btn" data-val="4">4</button>
+      </div>
+    </div>
+
+    <!-- Bold thickness -->
+    <div class="control-group">
+      <label>Bold Thickness <span id="weightLabel">Bold</span></label>
+      <div class="segments" id="weightBtns">
+        <button class="seg-btn" data-val="600">Light</button>
+        <button class="seg-btn" data-val="700">Medium</button>
+        <button class="seg-btn active" data-val="800">Bold</button>
+        <button class="seg-btn" data-val="900">Heavy</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Live preview -->
+  <div class="preview">
+    <div class="preview-label">Live Preview</div>
+    <div class="preview-text" id="previewText">Your settings applied to real text like this sentence.</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-muted">Free &amp; open · No data collected</span>
+    <div style="display:flex; gap:10px;">
+      <a class="footer-link" href="https://ko-fi.com/er4nant" target="_blank" rel="noopener" style="text-decoration:none;">☕ Ko-fi</a>
+      <a class="footer-link" href="https://github.com/Er4nant/word-anchor" target="_blank" rel="noopener" style="text-decoration:none;">GitHub ↗</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

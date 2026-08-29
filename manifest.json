@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "WordAnchor",
+  "version": "1.0",
+  "description": "Make any webpage easier to read, bold the start of every word to give your eyes a fixed anchor point.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "homepage_url": "https://github.com/Er4nant/word-anchor",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "wordanchor@er4nant.privacy-tools",
+      "strict_min_version": "109.0"
+    }
+  }
+}
