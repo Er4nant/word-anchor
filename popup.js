@@ -9,6 +9,16 @@ let settings = {
 
 const weightLabels = { 600: "Light", 700: "Medium", 800: "Bold", 900: "Heavy" };
 
+// Mirrors content.js WEIGHT_STYLES so the popup preview matches what
+// actually renders on real pages (most fonts only have 400/700 files,
+// so extra thickness beyond 700 is faked with a text-shadow stroke).
+const WEIGHT_STYLES = {
+  600: { fontWeight: 700, textShadow: "none" },
+  700: { fontWeight: 700, textShadow: "0 0 0.3px currentColor" },
+  800: { fontWeight: 700, textShadow: "0 0 0.3px currentColor, 0 0 0.3px currentColor" },
+  900: { fontWeight: 700, textShadow: "0 0 0.5px currentColor, 0 0 0.5px currentColor, 0 0 0.5px currentColor" },
+};
+
 const masterToggle = document.getElementById("masterToggle");
 const darkBtn = document.getElementById("darkBtn");
 const previewText = document.getElementById("previewText");
@@ -56,7 +66,9 @@ function renderPreview() {
     const rest = word.slice(count);
 
     const boldSpan = document.createElement("span");
-    boldSpan.style.fontWeight = settings.boldWeight;
+    const style = WEIGHT_STYLES[settings.boldWeight] || WEIGHT_STYLES[800];
+    boldSpan.style.fontWeight = style.fontWeight;
+    boldSpan.style.textShadow = style.textShadow;
     boldSpan.textContent = bold;
 
     const restSpan = document.createElement("span");

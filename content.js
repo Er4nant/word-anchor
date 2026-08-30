@@ -11,6 +11,25 @@ const SKIP_TAGS = new Set([
   "CODE", "PRE", "SELECT", "OPTION", "BUTTON", "LABEL"
 ]);
 
+// Most fonts on the web only ship two weight files (400 regular, 700 bold).
+// Asking for font-weight 600/800/900 on a font without those files just
+// gets snapped to the nearest one it has (almost always 700), so Light/
+// Medium/Bold/Heavy all render identically on most real pages. A text-shadow
+// "stroke" layered on top of a fixed bold weight fakes extra thickness
+// independent of what weight files the page's font actually provides.
+const WEIGHT_STYLES = {
+  600: { fontWeight: 700, textShadow: "none" },
+  700: { fontWeight: 700, textShadow: "0 0 0.3px currentColor" },
+  800: { fontWeight: 700, textShadow: "0 0 0.3px currentColor, 0 0 0.3px currentColor" },
+  900: { fontWeight: 700, textShadow: "0 0 0.5px currentColor, 0 0 0.5px currentColor, 0 0 0.5px currentColor" },
+};
+
+function applyWeightStyle(span, weight) {
+  const style = WEIGHT_STYLES[weight] || WEIGHT_STYLES[800];
+  span.style.fontWeight = style.fontWeight;
+  span.style.textShadow = style.textShadow;
+}
+
 function makeBionicWord(word, letterCount, boldWeight) {
   if (word.trim() === "") return word;
   const count = Math.min(letterCount, word.length);
@@ -21,7 +40,7 @@ function makeBionicWord(word, letterCount, boldWeight) {
   wrapper.setAttribute("data-bionic", "1");
 
   const boldSpan = document.createElement("span");
-  boldSpan.style.fontWeight = boldWeight;
+  applyWeightStyle(boldSpan, boldWeight);
   boldSpan.textContent = bold;
 
   const restSpan = document.createElement("span");
@@ -42,6 +61,11 @@ function applyBionicToNode(textNode) {
   const parent = textNode.parentNode;
   if (!parent || SKIP_TAGS.has(parent.tagName)) return;
   if (processedNodes.has(textNode)) return;
+  // Guard against reprocessing text inside our own wrapper spans (the bold/
+  // rest child spans don't carry data-bionic themselves, only the outer
+  // wrapper does) — without this, the MutationObserver treats the wrapper's
+  // own children as "new" content and rewraps them forever.
+  if (parent.closest && parent.closest("[data-bionic]")) return;
 
   const text = textNode.textContent;
   if (!text.trim()) return;
@@ -108,7 +132,7 @@ function revertBionic() {
 
 function updateBoldWeight(weight) {
   document.querySelectorAll("[data-bionic='1'] span:first-child").forEach(span => {
-    span.style.fontWeight = weight;
+    applyWeightStyle(span, weight);
   });
 }
 

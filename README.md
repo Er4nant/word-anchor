@@ -10,18 +10,23 @@ No data collection, no accounts, no tracking. Everything runs locally in your br
 
 ## Install
 
-Not on the Chrome Web Store or Firefox Add-ons yet. For now, load it manually:
+Submitted to both stores, pending review:
+- Chrome Web Store: link coming once approved
+- Firefox Add-ons (AMO): link coming once approved
+
+Until then, or if you want the latest dev build, load it manually:
 
 **Chrome / Edge (Chromium)**
 1. Clone or download this repo
 2. Go to `chrome://extensions`
 3. Enable Developer mode (top right)
-4. Click "Load unpacked" and select this folder
+4. Click "Load unpacked" and select the `word-anchor/` folder (or run `./build.sh` and use `dist/chrome/`)
 
 **Firefox**
 1. Clone or download this repo
-2. Go to `about:debugging#/runtime/this-firefox`
-3. Click "Load Temporary Add-on" and select `manifest.json`
+2. Run `./build.sh` (Firefox needs its own manifest, `dist/firefox/manifest.json`)
+3. Go to `about:debugging#/runtime/this-firefox`
+4. Click "Load Temporary Add-on" and select `dist/firefox/manifest.json`
 
 ## Features
 
@@ -33,11 +38,13 @@ Not on the Chrome Web Store or Firefox Add-ons yet. For now, load it manually:
 
 ## How it works
 
-`content.js` walks the visible text nodes on a page, splits each word, and bolds the first N letters using CSS `font-weight` inside a wrapping span. A `MutationObserver` reapplies this to content added dynamically after the initial page load. Settings are stored via `chrome.storage.sync`, so they follow you across synced browser instances.
+`content.js` walks the visible text nodes on a page, splits each word, and bolds the first N letters. Font weight is kept fixed at 700 since most fonts only ship regular/bold files, extra "thickness" (Light/Medium/Bold/Heavy) is achieved with a layered `text-shadow` stroke so the effect is visible on real page fonts, not just fonts with full weight ranges. A `MutationObserver` reapplies this to content added dynamically after the initial page load. Settings are stored via `chrome.storage.sync`, so they follow you across synced browser instances.
+
+Chrome and Firefox need slightly different manifest keys for the background script (`service_worker` vs `scripts`), so `manifest.json` and `manifest.firefox.json` are kept separate and `build.sh` packages both into store-ready zips under `dist/`.
 
 ## Status
 
-Functional, in final testing before store submission.
+Submitted to the Chrome Web Store and Firefox Add-ons (AMO), pending review.
 
 ## License
 
